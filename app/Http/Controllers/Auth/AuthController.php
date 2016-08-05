@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Position;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -28,7 +29,8 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/tasks';
+    // private $jawatan;
 
     /**
      * Create a new authentication controller instance.
@@ -37,6 +39,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
+        // $this->jawatan =['' => 'Select Country'] + Position::lists('id','position')->all();
+        // $jawatan = $this->jawatan;
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
@@ -49,9 +53,12 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'fullname' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'username'=>'required',
+            'ic'=> 'required',
+            'position'=>'required',
         ]);
     }
 
@@ -64,9 +71,12 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'fullname' => $data['fullname'],
+            'username'=>$data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'ic'=> $data['ic'],
+            'position'=>$data['position'],
         ]);
     }
 }
